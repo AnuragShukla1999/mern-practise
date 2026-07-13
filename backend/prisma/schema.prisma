@@ -1,0 +1,93 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id         Int     @id @default(autoincrement())
+    name       String?
+    email      String  @unique @db.VarChar(255)
+    password   String  @db.VarChar(255)
+    mobile     String  @unique @db.VarChar(16)
+    profileUrl String? @db.Text
+    gender     String?
+
+    // Audit Fields
+    deleted   Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    createdBy Int?
+    updatedBy Int?
+
+    conversationParticipant  ConversationParticipant[]
+    message  Message[]
+
+    @@map("users")
+}
+
+
+
+model Conversation {
+  id         Int     @id @default(autoincrement())
+  isGroup     Boolean  @default(false)
+  groupName   String?
+  groupAvatar String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversation")
+}
+
+
+
+model ConversationParticipant {
+  id         Int     @id @default(autoincrement())
+
+  userId         Int
+  conversationId Int
+
+  joinedAt       DateTime @default(now())
+  isAdmin        Boolean  @default(false)
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conversationId])
+
+  @@map("conversation_participant")
+}
+
+
+
+model Message {
+  id              String   @id @default(cuid())
+  conversationId  Int
+  senderId        Int
+
+  text            String
+
+  status          MessageStatus @default(SENT)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender          User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+   @@map("message")
+}
+
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
