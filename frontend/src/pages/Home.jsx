@@ -1,194 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import "./styles/Home.css";
-// import { FaSearch, FaPaperPlane, FaEllipsisV } from "react-icons/fa";
-// import axios from "axios";
-// import { useSelector } from "react-redux";
-// import socket from "../socket";
-
-// const Home = () => {
-//   // const [message, setMessage] = useState("");
-
-//   const user = useSelector((state) => state.auth.user);
-
-//   const [conversations, setConversations] = useState([]);
-//   const [selectedChat, setSelectedChat] = useState(null);
-//   const [messages, setMessages] = useState([]);
-//   const [message, setMessage] = useState("");
-
-
-//   useEffect(() => {
-//     socket.connect();
-
-//     socket.on("receive_message", (msg) => {
-//       if (msg.conversationId === selectedChat?.id) {
-//         setMessages((prev) => [...prev, msg])
-//       }
-//     });
-
-//     return () => {
-//       socket.off("receive_message");
-//       socket.disconnect();
-//     };
-//   }, [selectedChat]);
-
-
-//   console.log("user =====> ", user);
-
-
-//   const getConversations = async (chat) => {
-//     setSelectedChat(chat);
-
-//     const token = localStorage.getItem("token");
-
-//     const res = await axios.get(
-//       `http://localhost:3006/api/v1/message/${chat.id}`,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-
-//     setMessages(res.data);
-
-//     socket.emit("join_room", chat.id.toString());
-//   };
-
-
-//   const sendMessage = async (e) => {
-//     e.preventDefault();
-
-//     if (!message.trim()) return;
-
-//     const token = localStorage.getItem("token");
-
-//     const res = await axios.post(
-//       "http://localhost:3006/api/v1/message",
-//       {
-//         conversationId: selectedChat.id,
-//         senderId: user.id,
-//         text: message,
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-
-//     socket.emit("send_message", res.data);
-
-//     setMessages((prev) => [...prev, res.data]);
-
-//     setMessage("");
-//   };
-
-
-//   const getMessages = async () => {
-//     try {
-//       const token = localStorage.getItem("token");
-//       const res = await axios.get(`http://localhost:3006/api/v1/chat/${user.id}`, {
-//         headers: `Bearer ${token}`
-//       })
-
-//       console.log("res ====> ", res);
-
-//       setConversations(res.data);
-
-//     } catch (error) {
-//       console.log("error ====> ", error);
-//     }
-//   }
-
-
-
-//   useEffect(() => {
-//     if (user) {
-//       getConversations();
-//     }
-//   }, [user]);
-
-
-//   return (
-//     <div className="home">
-//       {/* Sidebar */}
-//       <div className="sidebar">
-//         <div className="sidebar-header">
-//           <div className="profile">
-//             <div className="avatar">{user?.name?.charAt(0).toUpperCase()}</div>
-//             <span>{user?.name}</span>
-//           </div>
-//         </div>
-
-//         <div className="search-box">
-//           <FaSearch />
-//           <input type="text" placeholder="Search chats..." />
-//         </div>
-
-//         <div className="chat-list">
-//           {conversations.map((chat) => (
-//             <div className="chat-item" key={chat.id}>
-//               <div className="avatar">{chat.name.charAt(0)}</div>
-
-//               <div className="chat-info">
-//                 <h4>{chat.name}</h4>
-//                 <p>{chat.lastMessage}</p>
-//               </div>
-
-//               <span>{chat.time}</span>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-//       {/* Chat Section */}
-//       <div className="chat-section">
-//         <div className="chat-header">
-//           <div className="header-user">
-//             <div className="avatar">J</div>
-//             <div>
-//               <h3>John Doe</h3>
-//               <small>Online</small>
-//             </div>
-//           </div>
-
-//           <FaEllipsisV />
-//         </div>
-
-//         <div className="chat-body">
-//           {messages.map((msg) => (
-//             <div
-//               key={msg.id}
-//               className={`message ${msg.senderId === user.id ? "sent" : "received"}`}
-//             >
-//               {msg.text}
-//             </div>
-//           ))}
-//         </div>
-
-//         <form className="chat-input" onSubmit={sendMessage}>
-//           <input
-//             type="text"
-//             placeholder="Type a message..."
-//             value={message}
-//             onChange={(e) => setMessage(e.target.value)}
-//           />
-
-//           <button type="submit">
-//             <FaPaperPlane />
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import "./styles/Home.css";
 import { FaSearch, FaPaperPlane, FaEllipsisV } from "react-icons/fa";
@@ -198,8 +7,6 @@ import socket from "../socket";
 
 const Home = () => {
   const user = useSelector((state) => state.auth.user);
-
-
   console.log("socket ------------> ", socket);
 
   const [conversations, setConversations] = useState([]);
@@ -364,6 +171,8 @@ const Home = () => {
 
       const chat = chatRes.data;
 
+      console.log("chat ==============> ", chat);
+
       setSelectedChat(chat);
 
       // Join socket room
@@ -388,6 +197,9 @@ const Home = () => {
       console.log(err);
     }
   };
+
+
+  console.log("selectedChat ==============> ", selectedChat);
 
 
 
@@ -491,9 +303,9 @@ const Home = () => {
             <div className="chat-header">
               <div className="header-user">
                 <div className="avatar">
-                  {selectedChat.participants
+                  {/* {selectedChat.participants
                     .find((p) => p.userId !== user.id)
-                    ?.user.name.charAt(0)}
+                    ?.user.name.charAt(0)} */}
                 </div>
 
                 {/* <div>

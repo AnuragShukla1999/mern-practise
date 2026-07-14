@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./styles/Signup.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import axios from "axios";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +11,8 @@ const Signup = () => {
     mobile: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -20,6 +24,16 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+
+    // Example API call for signup
+    axios.post("http://localhost:3006/api/v1/auth/signup", formData)
+      .then((response) => {
+        console.log("Signup successful:", response.data);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error during signup:", error);
+      });
   };
 
   return (
