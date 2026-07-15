@@ -26,7 +26,7 @@ const Signup = () => {
     console.log(formData);
 
     // Example API call for signup
-    axios.post("http://localhost:3006/api/v1/auth/signup", formData)
+    axios.post("http://10.94.229.198:3006/api/v1/auth/signup", formData)
       .then((response) => {
         console.log("Signup successful:", response.data);
         navigate("/");

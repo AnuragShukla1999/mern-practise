@@ -31,7 +31,7 @@ const Signin = () => {
         try {
             console.log(formData);
 
-            const res = await axios.post("http://localhost:3006/api/v1/auth/signin", formData, {
+            const res = await axios.post("http://10.94.229.198:3006/api/v1/auth/signin", formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
